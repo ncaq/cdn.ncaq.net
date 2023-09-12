@@ -1,3 +1,4 @@
+/ https://github.com/ncaq/cdn.ncaq.net/tree/master/public 301
 /dic-nico-intersection-pixiv.txt https://raw.githubusercontent.com/ncaq/dic-nico-intersection-pixiv/master/public/dic-nico-intersection-pixiv-google.txt 301
 /keymap.txt https://raw.githubusercontent.com/ncaq/dotfiles/master/mozc/keymap.txt 301
 /nlod.txt https://raw.githubusercontent.com/ncaq/dotfiles/master/mozc/nlod.txt 302
