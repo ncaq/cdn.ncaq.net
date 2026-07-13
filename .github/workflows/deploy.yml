@@ -25,6 +25,8 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
+      # git lfsがマシンに存在しているだけだと`git lfs pull`がスキップされるためセットアップを実行。
+      - run: git lfs install
       # checkoutの`lfs: true`はworktree展開前に`git lfs fetch`を実行するため、
       # `.lfsconfig`のForgejo向けURLが読まれずGitHubのLFSエンドポイントに向かって404になる。
       # checkout後に手動でpullすれば`.lfsconfig`が有効になる。
