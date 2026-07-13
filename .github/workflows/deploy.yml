@@ -35,4 +35,4 @@ jobs:
       # checkoutされたファイルはランナーのumaskに依存したパーミッションになっていて、
       # そのままだとCaddyが読み取れないことがある。
       # どうせ全世界に公開するファイルなので雑に755/644で問題ない。
-      - run: rsync --archive --delete --chmod=D755,F644 public/ /mnt/noa/cdn.ncaq.net/
+      - run: rsync --checksum --archive --delete --chmod=D755,F644 public/ /mnt/noa/cdn.ncaq.net/
