@@ -1,0 +1,29 @@
+name: deploy
+
+on:
+  push:
+    branches: [master]
+
+permissions: {}
+
+# デプロイは直列化し、後続のデプロイをキャンセルしない。
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: deploy
+    # seminar上のセルフホストランナーで実行し、
+    # 配信ディレクトリへ直接rsyncする。
+    # ランナー定義はdotfilesのnixos/host/seminar/github-runner/にある。
+    runs-on: [self-hosted, Linux]
+    permissions:
+      contents: read # リポジトリコンテンツの読み取り
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          lfs: true
+          persist-credentials: false
+      - run: rsync --archive --delete public/ /mnt/noa/cdn.ncaq.net/
