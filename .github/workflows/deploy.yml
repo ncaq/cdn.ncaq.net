@@ -15,8 +15,12 @@ jobs:
   deploy:
     name: deploy
     # seminar上のセルフホストランナーで実行し、
-    # 配信ディレクトリへ直接rsyncする。
-    # ランナー定義はdotfilesのnixos/host/seminar/github-runner/にある。
+    # ステージングのディレクトリへrsyncして、
+    # 書き終えた印をtouchする。
+    # 印を見たホストのサービスが、
+    # シンボリックリンクなどを捨てて配信ディレクトリへ写す。
+    # ランナー定義はdotfilesのnixos/host/seminar/github-runner/に、
+    # 同期の定義はnixos/host/seminar/cdn.nixにある。
     runs-on: [self-hosted, Linux]
     permissions:
       contents: read # リポジトリコンテンツの読み取り
@@ -31,8 +35,6 @@ jobs:
       # `.lfsconfig`のForgejo向けURLが読まれずGitHubのLFSエンドポイントに向かって404になる。
       # checkout後に手動でpullすれば`.lfsconfig`が有効になる。
       - run: git lfs pull
-      # --chmodで全ファイルをworld-readableに正規化する。
-      # checkoutされたファイルはランナーのumaskに依存したパーミッションになっていて、
-      # そのままだとCaddyが読み取れないことがある。
-      # どうせ全世界に公開するファイルなので雑に755/644で問題ない。
-      - run: rsync --checksum --archive --delete --chmod=D755,F644 public/ /mnt/noa/cdn.ncaq.net/
+      # パーミッションの正規化はホストの同期が行う。
+      - run: rsync --checksum --recursive --delete public/ /mnt/noa/cdn.ncaq.net-deploy/public/
+      - run: touch /mnt/noa/cdn.ncaq.net-deploy/deployed
